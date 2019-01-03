@@ -1,0 +1,10 @@
+default:
+  extensions:
+     Behat\MinkExtension:
+      base_url: "http://localhost"
+      browser_name: chrome
+      sessions:
+        default: 
+          selenium2:
+            wd_host: "http://localhost:4444/wd/hub"
+            capabilities: {"browserName":"chrome","version":"71","platform":"ANY","browserVersion":"71","browser":"chrome","name":"Behat Test"}
