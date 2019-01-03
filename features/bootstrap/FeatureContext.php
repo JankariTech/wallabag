@@ -12,36 +12,46 @@ use Behat\Behat\Context\SnippetAcceptingContext;
  */
 class FeatureContext extends RawMinkContext implements Context, SnippetAcceptingContext
 {
+//     /**
+//      * @Given the list of unread entries is empty
+//      */
+//     public function theListOfUnreadEntriesIsEmpty()
+//     {
+//         throw new Exception();
+//     }
+
     /**
-     * @Given the list of unread entries is empty
+     * @When the user adds a new entry with the url :link
      */
-    public function theListOfUnreadEntriesIsEmpty()
+    public function addANewEntries($link)
     {
-        throw new Exception();
+        $page=$this->getSession()->getPage();
+        $page->findById('nav-btn-add')->click();
+        $page->fillField('entry_url', $link);
+        $page->findButton('add')->click();
     }
 
     /**
-     * @When the user adds a new entry with the url :arg1
+     * @Then an entry should be listed in the list with the title :title and the link description :description
      */
-    public function theUserAddsANewEntryWithTheUrl($arg1)
+    public function anEntryShouldBeListedInTheListWithTheTitleAndTheLinkDescription($title, $description)
     {
-        throw new Exception();
+        $page=$this->getSession()->getPage();
+        $contentLocation = $page->find('xpath', '//div/ul//div');
+        $actualTitle = $contentLocation->find('css', '.card-content')->find('xpath', '/a')->getText();
+        expect($actualTitle)->toBe($title);
+        $actualDescription = $contentLocation->find('css', '.metadata')->find('xpath', '/a')->getText();
+        expect($actualDescription)->toBe($description);
     }
 
     /**
-     * @Then an entry should be listed in the list with the title :arg1 and the link description :arg2
+     * @Then the count of unread entries should be :num
      */
-    public function anEntryShouldBeListedInTheListWithTheTitleAndTheLinkDescription($arg1, $arg2)
+    public function theCountOfUnreadEntriesShouldBe($num)
     {
-        throw new Exception();
-    }
-
-    /**
-     * @Then the count of unread entries should be :arg1
-     */
-    public function theCountOfUnreadEntriesShouldBe($arg1)
-    {
-        throw new Exception();
+        $page=$this->getSession()->getPage();
+        $unread = $page->find('xpath','//ul[@id="slide-out"]//a[contains(text(),"Unread")]/span')->getHtml();
+        expect($unread)->toBe($num);
     }
 
     /**

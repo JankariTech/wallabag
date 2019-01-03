@@ -13,7 +13,7 @@
 
  Scenario: adding two new pages successfully
  	Given user has logged in with username "admin" and password "admin"
- 	And the list of unread entries is empty
+ 	#And the list of unread entries is empty
 	When the user adds a new entry with the url "http://www.jankaritech.com"
 	And the user adds a new entry with the url "http://www.ncell.com.np"
 	Then an entry should be listed in the list with the title "JankariTech" and the link description "jankaritech.com"
