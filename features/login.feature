@@ -6,7 +6,7 @@ Feature: Login
 Scenario: Successfully Login
 	Given the user has browsed to the login page
 	When the user logs in with username 'admin' and password 'admin' 
-	Then the user should be redirected to a page with the title 'Unread entries – wallabag'
+	Then the user should be redirected to a page with the title 'Quickstart – wallabag'
 	
 Scenario Outline: Unsuccessful Login
 	Given the user has browsed to the login page
