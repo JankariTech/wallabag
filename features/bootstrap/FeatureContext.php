@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\RawMinkContext; 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Exception\ElementException;
 
 /**
  * Defines application features from the specific context.
@@ -31,11 +32,17 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function entryShouldBeListed($title, $description)
     {
         $page=$this->getSession()->getPage();
-        $contentLocation = $page->find('xpath', '//div/ul//div');
-        $actualTitle = $contentLocation->find('css', '.card-content')->find('xpath', '/a')->getText();
-        expect($actualTitle)->toBe($title);
-        $actualDescription = $contentLocation->find('css', '.metadata')->find('xpath', '/a')->getText();
-        expect($actualDescription)->toBe($description);
+        $Allentry = $page->findAll('xpath', "//ul[contains(@class,'collection')]/li[contains(@class,'col')]");
+        if (empty($Allentry)){
+            $Allentry = $page->findAll('xpath', "//ul[contains(@class,'row data')]/li[contains(@class,'col')]");
+        }
+        foreach ($Allentry as $entry){
+            if ($entry->find('xpath', "//a[contains(@class,'card-title')]")->getText() == $title
+                && $entry->find('xpath', "//a[contains(@class,'grey-text')]")->getText() == $description){
+                return;
+            }
+        }
+        throw new Exception("Could not find entry");
     }
 
     /**
