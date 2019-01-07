@@ -1,28 +1,34 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 
 use Behat\MinkExtension\Context\RawMinkContext; 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Mink\Exception\ElementException;
 
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext extends RawMinkContext implements Context, SnippetAcceptingContext
 {
+    
+    protected $loginPage;
+    protected $quickStartPage;
+    protected $unreadPage;
+    
+    public function __construct(LoginPage $loginpage,QuickStartPage $quickStart,UnreadEntriesPage $unreadPage){
+        $this->loginPage = $loginpage;
+        $this->quickStartPage = $quickStart;
+        $this->unreadPage = $unreadPage;
+    }
+    
+    
     /**
      * @When the user adds a new entry with the url :link
      */
     public function addEntry($link)
     {
-        $page=$this->getSession()->getPage();
-        $page->findById('nav-btn-add')->click();
-        $page->fillField('entry_url', $link);
-        $page->findButton('add')->click();
+        $this->unreadPage->addNewEntry($this->getSession(),$link);
         
     }
 
@@ -31,18 +37,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function entryShouldBeListed($title, $description)
     {
-        $page=$this->getSession()->getPage();
-        $Allentry = $page->findAll('xpath', "//ul[contains(@class,'collection')]/li[contains(@class,'col')]");
-        if (empty($Allentry)){
-            $Allentry = $page->findAll('xpath', "//ul[contains(@class,'row data')]/li[contains(@class,'col')]");
-        }
-        foreach ($Allentry as $entry){
-            if ($entry->find('xpath', "//a[contains(@class,'card-title')]")->getText() == $title
-                && $entry->find('xpath', "//a[contains(@class,'grey-text')]")->getText() == $description){
-                return;
-            }
-        }
-        throw new Exception("Could not find entry");
+        $this->unreadPage->isEntryListed($this->getSession(),$title,$description);
     }
 
     /**
@@ -51,8 +46,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function theCountOfUnreadEntries($num)
     {
-        $page=$this->getSession()->getPage();
-        $unread = $page->find('xpath','//ul[@id="slide-out"]//a[contains(text(),"Unread")]/span')->getHtml();
+        $unread = $this->unreadPage->countUnreadEntry($this->getSession());
         expect($unread)->toBe($num);
     }
 
@@ -61,7 +55,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function visitLogIn()
     {
-        $this->visitPath("/login");
+        $this->loginPage->open();
     }
 
     /**
@@ -70,10 +64,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function logIn($username, $password)
     {
-        $page = $this->getSession()->getPage();
-        $page->fillField('username', $username);
-        $page->fillField('password', $password);
-        $page->find('xpath', '//form/div/button')->click();
+        $this->loginPage->login($this->getSession(), $username, $password);
     }
 
     /**
@@ -81,19 +72,17 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function redirectToPage($pageTitle)
     {
-        $pageHeading = $this->getSession()->getPage()->find('xpath', '//title');
-        $title = trim($pageHeading->getHtml());
-        $title = str_replace("\n", "", $title);
+        $title = $this->quickStartPage->redirect($this->getSession());
         expect($title)->toBe($pageTitle);
     }
 
     /**
      * @Then an error message should be displayed saying :errorMessage
      */
-    public function errorMessage($errorMesage)
+    public function errorMessage($errorMessage)
     {
-        $toastMessage = $this->getSession()->getPage()->findById('toast-container')->getText();
-        expect($toastMessage)->toBe($errorMesage);
+        $error = $this->loginPage->getError($this->getSession());
+        expect($error)->toBe($errorMessage);
     }
     
     /** @BeforeScenario */
@@ -127,77 +116,4 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
             $output = curl_exec($ch);
         } 
     }
-    
-    /**
-     * @Given there is an entry listed in a list with the title :arg1 and the link description :arg2
-     */
-    public function thereIsAnEntryListedInAListWithTheTitleAndTheLinkDescription($arg1, $arg2)
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @When the user deletes the item with the title :arg1
-     */
-    public function theUserDeletesTheItemWithTheTitle($arg1)
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @Then an entry with the title :arg1 and the link description :arg2  should not be listed in the list
-     */
-    public function anEntryWithTheTitleAndTheLinkDescriptionShouldNotBeListedInTheList($arg1, $arg2)
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @Then count of unread entries is :arg1
-     */
-    public function countOfUnreadEntriesIs($arg1)
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @Given there is listed in the list with the title :arg1 and the link description :arg2
-     */
-    public function thereIsListedInTheListWithTheTitleAndTheLinkDescription($arg1, $arg2)
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @Given count of entries is :arg1
-     */
-    public function countOfEntriesIs($arg1)
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @When the user click on delete button
-     */
-    public function theUserClickOnDeleteButton()
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @When user press Cancel button on popup
-     */
-    public function userPressCancelButtonOnPopup()
-    {
-        throw new Exception();
-    }
-    
-    /**
-     * @Then an entry with the title :arg1 and the link description :arg2  should be listed in the list
-     */
-    public function anEntryWithTheTitleAndTheLinkDescriptionShouldBeListedInTheList($arg1, $arg2)
-    {
-        throw new Exception();
-    }
-    
 }

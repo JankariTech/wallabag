@@ -1,5 +1,6 @@
 default:
   extensions:
+     SensioLabs\Behat\PageObjectExtension: ~
      Behat\MinkExtension:
       base_url: "http://localhost"
       browser_name: chrome
