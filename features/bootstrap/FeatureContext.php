@@ -117,4 +117,76 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
             $output = curl_exec($ch);
         } 
     }
+
+    /**
+     * @Given there is an entry listed in a list with the title :arg1 and the link description :arg2
+     */
+    public function thereIsAnEntryListedInAListWithTheTitleAndTheLinkDescription($arg1, $arg2)
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @When the user deletes the item with the title :arg1
+     */
+    public function theUserDeletesTheItemWithTheTitle($arg1)
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @Then an entry with the title :arg1 and the link description :arg2  should not be listed in the list
+     */
+    public function anEntryWithTheTitleAndTheLinkDescriptionShouldNotBeListedInTheList($arg1, $arg2)
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @Then count of unread entries is :arg1
+     */
+    public function countOfUnreadEntriesIs($arg1)
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @Given there is listed in the list with the title :arg1 and the link description :arg2
+     */
+    public function thereIsListedInTheListWithTheTitleAndTheLinkDescription($arg1, $arg2)
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @Given count of entries is :arg1
+     */
+    public function countOfEntriesIs($arg1)
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @When the user click on delete button
+     */
+    public function theUserClickOnDeleteButton()
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @When user press Cancel button on popup
+     */
+    public function userPressCancelButtonOnPopup()
+    {
+        throw new Exception();
+    }
+
+    /**
+     * @Then an entry with the title :arg1 and the link description :arg2  should be listed in the list
+     */
+    public function anEntryWithTheTitleAndTheLinkDescriptionShouldBeListedInTheList($arg1, $arg2)
+    {
+        throw new Exception();
+    }
 }
