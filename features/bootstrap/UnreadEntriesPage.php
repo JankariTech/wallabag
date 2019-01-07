@@ -8,7 +8,7 @@ class UnreadEntriesPage extends Page{
     protected $listEntriesPath = "//ul[contains(@class,'collection')]/li[contains(@class,'col')]";
     protected $gridEntriesPath = "//ul[contains(@class,'row data')]/li[contains(@class,'col')]";
     protected $titleXpath = "//a[contains(@class,'card-title')]";
-    protected  $descriptionXpath = "//a[contains(@class,'grey-text')]";
+    protected $descriptionXpath = "//a[contains(@class,'grey-text')]";
     protected $navBtnID = 'nav-btn-add';
     protected $entryUrl = 'entry_url';
     protected $addButton = 'add';
@@ -27,10 +27,10 @@ class UnreadEntriesPage extends Page{
         foreach ($Allentry as $entry){
             if ($entry->find('xpath', $this->titleXpath)->getText() == $title
                 && $entry->find('xpath', $this->descriptionXpath)->getText() == $description){
-                    return;
+                    return true;
             }
         }
-        throw new Exception("Could not find entry");
+        return false;
     }
     
     public function addNewEntry(Session $session,$link){

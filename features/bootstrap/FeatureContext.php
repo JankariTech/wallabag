@@ -37,7 +37,8 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function entryShouldBeListed($title, $description)
     {
-        $this->unreadPage->isEntryListed($this->getSession(),$title,$description);
+        $isEntryListed = $this->unreadPage->isEntryListed($this->getSession(),$title,$description);
+        expect($isEntryListed)->toBe(true);
     }
 
     /**
