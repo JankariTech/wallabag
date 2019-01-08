@@ -25,6 +25,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     
     /**
      * @When the user adds a new entry with the url :link
+     * 
      */
     public function addEntry($link)
     {
@@ -34,6 +35,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
 
     /**
      * @Then an entry should be listed in the list with the title :title and the link description :description
+     * @Given there is an entry listed in a list with the title :title and the link description :description
      */
     public function entryShouldBeListed($title, $description)
     {
@@ -64,7 +66,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      * @Given user has logged in with username :username and password :password
      */
     public function logIn($username, $password)
-    {
+    {https://dont-be-afraid-to-commit.readthedocs.io/en/latest/git/commandlinegit.html
         $this->loginPage->login($this->getSession(), $username, $password);
     }
 
@@ -94,7 +96,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,
-            "grant_type=password&client_id=1_5lo5ugrdtyg4sgwcsk0wo4ogsws04ccokcw4ss8w0ggkkso00w&client_secret=3tgtp9ry6q80wokg84okcscwgsws8kwog4kgkc000s8kc848ks&username=admin&password=admin");
+            "grant_type=password&client_id=1_4amhxcv3ipes0ggkcswogwscowc4wsokkoo4gkk80wck4kgkk8&client_secret=483or32b4ksgcggcskc404kgo4ccgokogc4o8g8wg8s8cgcg8w&username=admin&password=admin");
         $output = curl_exec($ch);
         $outputArray = json_decode($output, true);
         $accessToken = $outputArray['access_token'];
@@ -118,75 +120,20 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         } 
     }
 
+  
     /**
-     * @Given there is an entry listed in a list with the title :arg1 and the link description :arg2
+     * @When the user deletes the item with the title :title
      */
-    public function thereIsAnEntryListedInAListWithTheTitleAndTheLinkDescription($arg1, $arg2)
+    public function deleteItem($title)
     {
-        throw new Exception();
+        $this->unreadPage->deleteEntry($this->getSession(), $title);
     }
 
     /**
-     * @When the user deletes the item with the title :arg1
+     * @When user press cancel button on popup after pressing delete button for title :title
      */
-    public function theUserDeletesTheItemWithTheTitle($arg1)
+    public function userPressCancel($title)
     {
-        throw new Exception();
-    }
-
-    /**
-     * @Then an entry with the title :arg1 and the link description :arg2  should not be listed in the list
-     */
-    public function anEntryWithTheTitleAndTheLinkDescriptionShouldNotBeListedInTheList($arg1, $arg2)
-    {
-        throw new Exception();
-    }
-
-    /**
-     * @Then count of unread entries is :arg1
-     */
-    public function countOfUnreadEntriesIs($arg1)
-    {
-        throw new Exception();
-    }
-
-    /**
-     * @Given there is listed in the list with the title :arg1 and the link description :arg2
-     */
-    public function thereIsListedInTheListWithTheTitleAndTheLinkDescription($arg1, $arg2)
-    {
-        throw new Exception();
-    }
-
-    /**
-     * @Given count of entries is :arg1
-     */
-    public function countOfEntriesIs($arg1)
-    {
-        throw new Exception();
-    }
-
-    /**
-     * @When the user click on delete button
-     */
-    public function theUserClickOnDeleteButton()
-    {
-        throw new Exception();
-    }
-
-    /**
-     * @When user press Cancel button on popup
-     */
-    public function userPressCancelButtonOnPopup()
-    {
-        throw new Exception();
-    }
-
-    /**
-     * @Then an entry with the title :arg1 and the link description :arg2  should be listed in the list
-     */
-    public function anEntryWithTheTitleAndTheLinkDescriptionShouldBeListedInTheList($arg1, $arg2)
-    {
-        throw new Exception();
+        $this->unreadPage->cancelDelete($this->getSession(), $title);
     }
 }

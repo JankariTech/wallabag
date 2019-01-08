@@ -4,17 +4,17 @@ Feature: delete entries
 	So that I can remove website which I dont need anymore
 
 Scenario: deleting the selected entries successfully
-	Given user has logged in with username "admin" and password "admin"
+	Given the user has browsed to the login page
+	And user has logged in with username "admin" and password "admin"
+	And the user adds a new entry with the url "http://www.jankaritech.com"
  	And there is an entry listed in a list with the title "JankariTech" and the link description "jankaritech.com"
-	When the user deletes the item with the title "..."
-	Then an entry with the title "JankariTech" and the link description "jankaritech.com"  should not be listed in the list 
-	And count of unread entries is 0
+	When the user deletes the item with the title "JankariTech"
+	Then the count of unread entries should be 0
 
 Scenario: Cancelling the delete operation 
-	Given user has logged in with username "admin" and password "admin"
- 	And there is listed in the list with the title "JankariTech" and the link description "jankaritech.com"
- 	And count of entries is 1
-	When the user click on delete button
-	And user press Cancel button on popup
-	Then an entry with the title "JankariTech" and the link description "jankaritech.com"  should be listed in the list 
-And count of unread entries is 1
+	Given the user has browsed to the login page
+	And user has logged in with username "admin" and password "admin"
+	And the user adds a new entry with the url "http://www.jankaritech.com"
+ 	And there is an entry listed in a list with the title "JankariTech" and the link description "jankaritech.com"
+	When user press cancel button on popup after pressing delete button for title "JankariTech"
+	Then the count of unread entries should be 1
