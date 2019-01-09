@@ -1,5 +1,6 @@
 <?php
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 
 use Behat\MinkExtension\Context\RawMinkContext; 
@@ -22,20 +23,18 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         $this->unreadPage = $unreadPage;
     }
     
-    
     /**
      * @When the user adds a new entry with the url :link
+     * @Given the user has added a new entry with the url :link
      * 
      */
     public function addEntry($link)
     {
-        $this->unreadPage->addNewEntry($this->getSession(),$link);
-        
+        $this->unreadPage->addNewEntry($this->getSession(),$link);        
     }
 
     /**
      * @Then an entry should be listed in the list with the title :title and the link description :description
-     * @Given there is an entry listed in a list with the title :title and the link description :description
      */
     public function entryShouldBeListed($title, $description)
     {
@@ -135,5 +134,13 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function userPressCancel($title)
     {
         $this->unreadPage->cancelDelete($this->getSession(), $title);
+    }
+
+    /**
+     * @Then there should not be entry in list with title :title and the link description :description
+     */
+    public function thereShouldNotBeEntryInListWithTitle($title,$description)
+    {
+        expect($this->unreadPage->isEntryListed($this->getSession(), $title, $description))->toBe(false);
     }
 }

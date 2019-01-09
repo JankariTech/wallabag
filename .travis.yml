@@ -40,6 +40,8 @@ matrix:
     include:
         - php: 7.0
           env: CS_FIXER=run VALIDATE_TRANSLATION_FILE=run ASSETS=build DB=sqlite
+        - php: 7.0
+          env: ASSETS = build RUN_UI_TEST=true
     allow_failures:
         - php: nightly
 
@@ -88,3 +90,4 @@ script:
     - if [[ $VALIDATE_TRANSLATION_FILE = run ]]; then php bin/console lint:yaml app/Resources/CraueConfigBundle/translations -v ; fi;
     - if [[ $VALIDATE_TRANSLATION_FILE = run ]]; then php bin/console lint:yaml src/Wallabag/UserBundle/Resources/translations -v ; fi;
     - if [[ $ASSETS = build ]]; then yarn run build:prod; fi;
+    - if [[ $RUN_UI_TEST = true ]]; then php bin/console server:start && curl http://localhost:8000; fi;
