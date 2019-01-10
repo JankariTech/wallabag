@@ -11,6 +11,8 @@ addons:
     apt:
         packages:
             - tidy
+    sauce_connect: true
+    
 
 # cache vendor dirs
 cache:
@@ -93,3 +95,4 @@ script:
     - if [[ $VALIDATE_TRANSLATION_FILE = run ]]; then php bin/console lint:yaml src/Wallabag/UserBundle/Resources/translations -v ; fi;
     - if [[ $ASSETS = build ]]; then yarn run build:prod; fi;
     - if [[ $RUN_UI_TEST = true ]]; then php bin/console server:start && curl http://wallabag:8000; fi;
+    - if [[ $RUN_UI_TEST = true ]]; then php bin/behat --profile=test; fi;

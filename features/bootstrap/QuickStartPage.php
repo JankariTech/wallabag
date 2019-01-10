@@ -6,7 +6,7 @@ class QuickStartPage extends Page{
     protected $path = '/quickstart';
     protected $titleXPath = '//title';
     
-    public function redirect(Session $session){
+    public function checkTitle(Session $session){
         $pageHeading = $session->getPage()->find('xpath', $this->titleXPath);
         $title = trim($pageHeading->getHtml());
         $title = str_replace("\n", "", $title);

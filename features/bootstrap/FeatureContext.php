@@ -74,7 +74,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function redirectToPage($pageTitle)
     {
-        $title = $this->quickStartPage->redirect($this->getSession());
+        $title = $this->quickStartPage->checkTitle($this->getSession());
         expect($title)->toBe($pageTitle);
     }
 
@@ -91,16 +91,17 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function clearAllItemsBeforeScenario(BeforeScenarioScope $scope)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://localhost/oauth/v2/token");
+        $SERVER_URL = $this->getMinkParameter("base_url");
+        curl_setopt($ch, CURLOPT_URL, "$SERVER_URL/oauth/v2/token");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,
-            "grant_type=password&client_id=1_4amhxcv3ipes0ggkcswogwscowc4wsokkoo4gkk80wck4kgkk8&client_secret=483or32b4ksgcggcskc404kgo4ccgokogc4o8g8wg8s8cgcg8w&username=admin&password=admin");
+            "grant_type=password&client_id=1_5lo5ugrdtyg4sgwcsk0wo4ogsws04ccokcw4ss8w0ggkkso00w&client_secret=3tgtp9ry6q80wokg84okcscwgsws8kwog4kgkc000s8kc848ks&username=admin&password=admin");
         $output = curl_exec($ch);
         $outputArray = json_decode($output, true);
         $accessToken = $outputArray['access_token'];
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://localhost/api/entries.json");
+        curl_setopt($ch, CURLOPT_URL, "$SERVER_URL/api/entries.json");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Authorization:Bearer ' . $accessToken
@@ -109,7 +110,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         $outputArray = json_decode($output, true);
         foreach ($outputArray["_embedded"]["items"] as $item) {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "http://localhost/api/entries/".$item["id"].".json");
+            curl_setopt($ch, CURLOPT_URL, "$SERVER_URL/api/entries/".$item["id"].".json");
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
