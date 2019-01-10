@@ -5,6 +5,7 @@ use Behat\Behat\Context\Context;
 
 use Behat\MinkExtension\Context\RawMinkContext; 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 /**
@@ -88,8 +89,8 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         expect($error)->toBe($errorMessage);
     }
     
-    /** @BeforeScenario */
-    public function clearAllItemsBeforeScenario(BeforeScenarioScope $scope)
+    /** @AfterScenario */
+    public function clearAllItemsAfterScenario(AfterScenarioScope $scope)
     {
         $ch = curl_init();
         $SERVER_URL = $this->getMinkParameter("base_url");
