@@ -73,6 +73,7 @@ before_script:
     - if [[ ! $PHP = hhvm* ]]; then phpenv config-rm xdebug.ini || echo "xdebug not available"; fi
     - composer self-update --no-progress
     - if [[ $DB = pgsql ]]; then psql -c 'create database wallabag_test;' -U postgres; fi;
+    - if [[ $DB = mysql ]]; then mysql -e 'create database wallabag_test;' -u root; fi;
     # increase swap to avoid "proc_open(): fork failed - Cannot allocate memory"
     # this should be removed when no more PHP 5 build will be defined
     - sudo swapon -s
