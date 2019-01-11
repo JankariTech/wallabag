@@ -3,6 +3,7 @@ language: php
 services:
     - rabbitmq
     - redis
+    - mysql
 
 # used for HHVM
 addons:
