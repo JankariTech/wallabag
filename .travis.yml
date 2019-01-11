@@ -37,7 +37,6 @@ node_js:
 env:
    global:
     - SELENIUM_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@localhost:4445/wd/hub
-    - BEHAT_PARAMS={"extensions":{"Behat\\MinkExtension":{"selenium2":{"wd_host":"'${SELENIUM_URL}'"}}}}
    matrix:
     - DB=mysql
     - DB=pgsql
@@ -67,6 +66,7 @@ install:
     - if [[ $ASSETS = build ]]; then yarn install; fi;
 
 before_script:
+    - export BEHAT_PARAMS='{"extensions":{"Behat\\MinkExtension":{"selenium2":{"wd_host":"'${SELENIUM_URL}'"}}}}'
     - PHP=$TRAVIS_PHP_VERSION
     - if [[ ! $PHP = hhvm* ]]; then echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi;
     # xdebug isn't enable for PHP 7.1
