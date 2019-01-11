@@ -49,7 +49,7 @@ matrix:
         - php: 7.0
           env: CS_FIXER=run VALIDATE_TRANSLATION_FILE=run ASSETS=build DB=sqlite
         - php: 7.0
-          env: ASSETS = build RUN_UI_TEST=true DB=mysql
+          env: ASSETS=build RUN_UI_TEST=true DB=mysql
     allow_failures:
         - php: nightly
 

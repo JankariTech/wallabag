@@ -2,7 +2,7 @@ default:
   extensions:
      SensioLabs\Behat\PageObjectExtension: ~
      Behat\MinkExtension:
-      base_url: "http://localhost"
+      base_url: "http://localhost:8000"
       browser_name: chrome
       sessions:
         default: 
