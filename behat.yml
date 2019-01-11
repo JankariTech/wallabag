@@ -19,7 +19,6 @@ test:
         sessions:
            default: 
              selenium2:
-               wd_host: "http://localhost:4445/wd/hub"
                capabilities: {"browserName":"chrome","version":"71","platform":"ANY","browserVersion":"71","browser":"chrome","name":"Behat Test"}
             
         

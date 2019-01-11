@@ -35,6 +35,9 @@ node_js:
     - "5"
 
 env:
+   global:
+    - BEHAT_PARAMS={"extensions":{"Behat\\MinkExtension":{"selenium2":{"wd_host":"http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@localhost:4445/wd/hub"}}}}
+   matrix:
     - DB=mysql
     - DB=pgsql
     - DB=sqlite
