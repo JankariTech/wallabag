@@ -5,7 +5,7 @@
  	
  Background:
  	Given the user has browsed to the login page
- 	And user has logged in with username "admin" and password "admin"
+ 	And user has logged in with username "admin" and password "mypassword"
  	And the list of unread entries is 0
  
 
