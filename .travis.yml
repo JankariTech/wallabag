@@ -100,6 +100,7 @@ script:
     - if [[ $VALIDATE_TRANSLATION_FILE = run ]]; then php bin/console lint:yaml app/Resources/CraueConfigBundle/translations -v ; fi;
     - if [[ $VALIDATE_TRANSLATION_FILE = run ]]; then php bin/console lint:yaml src/Wallabag/UserBundle/Resources/translations -v ; fi;
     - if [[ $ASSETS = build ]] && [[ $RUN_UI_TEST != true ]]; then yarn run build:prod; fi;
+    - diff app/config/parameters_acceptance.yml app/config/parameters.yml
     - if [[ $RUN_UI_TEST = true ]]; then mv app/config/parameters_acceptance.yml app/config/parameters.yml; fi;
     - cat app/config/parameters.yml
     - if [[ $RUN_UI_TEST = true ]]; then yarn run build:dev; fi; 
