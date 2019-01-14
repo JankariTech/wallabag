@@ -7,7 +7,7 @@ Background:
 	Given the user has browsed to the login page
 
 Scenario: Successfully Login
-	When the user logs in with username 'admin' and password 'admin' 
+	When the user logs in with username 'admin' and password 'mypassword' 
 	Then the user should be redirected to a page with the title 'Quickstart – wallabag'
 	
 Scenario Outline: Unsuccessful Login
