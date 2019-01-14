@@ -7,6 +7,7 @@ use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 
 /**
  * Defines application features from the specific context.
@@ -17,11 +18,13 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     protected $loginPage;
     protected $quickStartPage;
     protected $unreadPage;
+    protected $apiClientPage;
     
-    public function __construct(LoginPage $loginpage,QuickStartPage $quickStart,UnreadEntriesPage $unreadPage){
+    public function __construct(LoginPage $loginpage,QuickStartPage $quickStart,UnreadEntriesPage $unreadPage,APIClientsPage $apiClientPage){
         $this->loginPage = $loginpage;
         $this->quickStartPage = $quickStart;
         $this->unreadPage = $unreadPage;
+        $this->apiClientPage= $apiClientPage;
     }
     
     /**
@@ -59,7 +62,6 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function visitLogIn()
     {
         $this->loginPage->open();
-        var_dump($this->getSession()->getDriver()->getWebDriverSession()->getUrl());
     }
 
     /**
@@ -67,7 +69,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      * @Given user has logged in with username :username and password :password
      */
     public function logIn($username, $password)
-    {https://dont-be-afraid-to-commit.readthedocs.io/en/latest/git/commandlinegit.html
+    {
         $this->loginPage->login($this->getSession(), $username, $password);
     }
 
@@ -89,16 +91,31 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         expect($error)->toBe($errorMessage);
     }
     
-    /** @AfterScenario */
-    public function clearAllItemsAfterScenario(AfterScenarioScope $scope)
-    {
+    /** 
+     * @BeforeScenario 
+     */   
+    public function  getApiClient(BeforeScenarioScope $scope){
+        if ( getenv('API_CLIENT_ID') == false && getenv('CLIENT_SECRET') == false){
+                $this->visitLogIn();
+                $this->logIn('admin','admin');
+                $this->apiClientPage->open();
+                $this->apiClientPage->createClient($this->getSession(), 'admin');
+                $API_CLIENT_ID=$this->apiClientPage->getClientId($this->getSession());
+                $apiCLIENT_SECRET=$this->apiClientPage->getCLIENT_SECRET($this->getSession());
+                putenv("API_CLIENT_ID=$API_CLIENT_ID");
+                putenv("CLIENT_SECRET=$apiCLIENT_SECRET"); 
+        }   
+    }
+    
+    /** @BeforeScenario  */
+    public function clearAllItemsAfterScenario(BeforeScenarioScope $scope){
         $ch = curl_init();
         $SERVER_URL = $this->getMinkParameter("base_url");
         curl_setopt($ch, CURLOPT_URL, "$SERVER_URL/oauth/v2/token");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,
-            "grant_type=password&client_id=1_5lo5ugrdtyg4sgwcsk0wo4ogsws04ccokcw4ss8w0ggkkso00w&client_secret=3tgtp9ry6q80wokg84okcscwgsws8kwog4kgkc000s8kc848ks&username=admin&password=admin");
+            'grant_type=password&client_id='.getenv('API_CLIENT_ID').'&client_secret='.getenv('CLIENT_SECRET').'&username=admin&password=admin');
         $output = curl_exec($ch);
         $outputArray = json_decode($output, true);
         $accessToken = $outputArray['access_token'];
