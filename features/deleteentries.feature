@@ -5,7 +5,7 @@ Feature: delete entries
 
 Background:
 	Given the user has browsed to the login page
-	And user has logged in with username "admin" and password "mypassword"
+	And user has logged in as super admin
 	And the user has added a new entry with the url "http://www.jankaritech.com"
 
 Scenario: deleting the selected entries successfully

@@ -67,6 +67,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function visitLogIn()
     {
         $this->loginPage->open();
+        var_dump($this->getSession()->getDriver()->getWebDriverSession()->getUrl());
     }
     
     /**
@@ -76,6 +77,15 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function logIn($username, $password)
     {
         $this->loginPage->login($this->getSession(), $username, $password);
+    }
+    
+    /**
+     * @When the user logs in as super admin
+     * @Given user has logged in as super admin
+     */
+    public function logInSuperAdmin()
+    {
+        $this->loginPage->login($this->getSession(), $this->username, $this->password);
     }
     
     /**
