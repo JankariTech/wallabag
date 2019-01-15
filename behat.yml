@@ -1,4 +1,11 @@
 default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext:
+           parameters:
+            adminUserName: admin
+            adminPassword: mypassword
   extensions:
      SensioLabs\Behat\PageObjectExtension: ~
      Behat\MinkExtension:
@@ -11,6 +18,13 @@ default:
             capabilities: {"browserName":"chrome","version":"71","platform":"ANY","browserVersion":"71","browser":"chrome","name":"Behat Test"}
             
 test:
+  suites:
+    default:
+      contexts:
+        - FeatureContext:
+           parameters:
+            adminUserName: admin
+            adminPassword: mypassword
   extensions:
      SensioLabs\Behat\PageObjectExtension: ~
      Behat\MinkExtension:
@@ -20,5 +34,3 @@ test:
            default: 
              selenium2:
                capabilities: {"browserName":"chrome","version":"71","platform":"ANY","browserVersion":"71","browser":"chrome","name":"Behat Test"}
-            
-        
