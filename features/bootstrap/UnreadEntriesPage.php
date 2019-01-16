@@ -1,6 +1,7 @@
 <?php
 use Behat\Mink\Session;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
+use Behat\Mink\Element\NodeElement;
 
 class UnreadEntriesPage extends Page{
     protected $path = '/unread/list';
@@ -14,11 +15,21 @@ class UnreadEntriesPage extends Page{
     protected $addButton = 'add';
     protected $deletexpath="//a[contains(@title,'Delete')]";
     
+    /**
+     * count number of unread entries present
+     * @param Session $session
+     * @return string
+     */
     public function countUnreadEntry(Session $session){
         $page=$session->getPage();
         return $page->find('xpath',$this->unreadCountXPath)->getHtml();
     }
     
+    /**
+     * get out all of entries present at unreadentries
+     * @param Session $session
+     * @return NodeElement[]
+     */
     private function getAllEntry($session){
         $page=$session->getPage();
         $Allentry = $page->findAll('xpath', $this->listEntriesPath);
@@ -28,6 +39,13 @@ class UnreadEntriesPage extends Page{
         return $Allentry;
     }
     
+    /**
+     * check if their is entry listed or not
+     * @param Session $session
+     * @param string $title
+     * @param string $description
+     * @return boolean
+     */
     public function isEntryListed(Session $session,$title,$description){
         $Allentry = $this->getAllEntry($session);
         foreach ($Allentry as $entry){
@@ -39,6 +57,12 @@ class UnreadEntriesPage extends Page{
         return false;
     }
     
+    /**
+     * delte entry which tiitle is provided
+     * @param Session $session
+     * @param string $title
+     * @return void
+     */
     public function deleteEntry(Session $session,$title){
         $Allentry = $this->getAllEntry($session);
         foreach ($Allentry as $entry){
@@ -50,8 +74,11 @@ class UnreadEntriesPage extends Page{
         }
     }
     
-    
-    
+    /**
+     * Cancel delete operation
+     * @param Session $session
+     * @param string $title
+     */    
     public function cancelDelete(Session $session,$title){
         $Allentry = $this->getAllEntry($session);
         foreach ($Allentry as $entry){
@@ -63,6 +90,11 @@ class UnreadEntriesPage extends Page{
         }
     }
     
+    /**
+     * add new entry to list of unread entries
+     * @param Session $session
+     * @param string $link
+     */
     public function addNewEntry(Session $session,$link){
         $page=$session->getPage();
         $page->findById($this->navBtnID)->click();

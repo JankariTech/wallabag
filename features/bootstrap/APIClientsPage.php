@@ -2,7 +2,6 @@
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 use Behat\Mink\Session;
 
-
 class APIClientsPage extends Page{
     protected $path= "/developer/client/create";
     protected $clientNameInputId="client_name";
@@ -12,7 +11,7 @@ class APIClientsPage extends Page{
     protected  $clientIdXpath="//li[contains(text(),'Client ID: ')]/strong";
     
     /**
-     * 
+     * create a new client
      * @param Session $session
      * @param string $clientName
      */
@@ -22,6 +21,7 @@ class APIClientsPage extends Page{
         $page->fillField( $this->clientNameInputId,$clientName);
         $page->findById($this->createNewClientButtonId)->click();   
     }
+    
     /**
      * get APIclient id
      * @param Session $session
@@ -31,17 +31,15 @@ class APIClientsPage extends Page{
         $clientId=$session->getPage()->find('xpath', $this->clientIdXpath)->getText();
         return $clientId;
     }
+    
     /**
-     *  get APIclient secrete key
+     *  get APIclient secree key
      * @param Session $session
      * @return string
      */
-    
     public function  getClientSecret(Session $session){
         $clientsecret=$session->getPage()->find('xpath', $this->clientsecreteXpath)->getText();
         return $clientsecret;
     }
-    
-    
 }
 ?>
