@@ -50,6 +50,8 @@ class UnreadEntriesPage extends Page{
         }
     }
     
+    
+    
     public function cancelDelete(Session $session,$title){
         $Allentry = $this->getAllEntry($session);
         foreach ($Allentry as $entry){

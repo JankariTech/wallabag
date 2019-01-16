@@ -21,6 +21,9 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     protected $apiClientPage;
     protected $username;
     protected $password;
+    protected $footerBarXPath = "//div[contains(@style,'display: block') and contains(@id,'sfToolbarMainContent')]";
+    protected $footerHideButton = "//a[contains(@class,'hide-button')]";
+    
     public function __construct(
         LoginPage $loginpage,QuickStartPage $quickStart,UnreadEntriesPage $unreadPage,APIClientsPage $apiClientPage,
         $parameters){
@@ -115,22 +118,35 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
             $this->logIn($this->username,$this->password);
             $this->apiClientPage->open();
             $this->apiClientPage->createClient($this->getSession(), $this->username);
-            $API_CLIENT_ID=$this->apiClientPage->getClientId($this->getSession());
-            $apiCLIENT_SECRET=$this->apiClientPage->getClientSecret($this->getSession());
-            putenv("API_CLIENT_ID=$API_CLIENT_ID");
-            putenv("CLIENT_SECRET=$apiCLIENT_SECRET");
+            $apiClientId=$this->apiClientPage->getClientId($this->getSession());
+            $apiClientSecret=$this->apiClientPage->getClientSecret($this->getSession());
+            putenv("API_CLIENT_ID=$apiClientId");
+            putenv("CLIENT_SECRET=$apiClientSecret");
+        }
+    }
+    
+    /**
+     * @BeforeScenario
+     * @param BeforeScenarioScope $scope
+     */
+    public function hideFooter(BeforeScenarioScope $scope){
+        $footerBar = $this->getSession()->getPage()->find('xpath', $this->footerBarXPath);
+        if ($footerBar != Null){
+            $this->getSession()->getPage()->find('xpath', $this->footerHideButton)->click();
         }
     }
     
     /** @BeforeScenario  */
-    public function clearAllItemsAfterScenario(BeforeScenarioScope $scope){
+    public function clearAllItemsBeforeScenario(BeforeScenarioScope $scope){
         $ch = curl_init();
         $SERVER_URL = $this->getMinkParameter("base_url");
         curl_setopt($ch, CURLOPT_URL, "$SERVER_URL/oauth/v2/token");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,
-            'grant_type=password&client_id='.getenv('API_CLIENT_ID').'&client_secret='.getenv('CLIENT_SECRET').'&username='. $this->username. '&password='.$this->password);
+            'grant_type=password&client_id='.getenv('API_CLIENT_ID').
+            '&client_secret='.getenv('CLIENT_SECRET').'&username='. $this->username. 
+            '&password='.$this->password);
         $output = curl_exec($ch);
         $outputArray = json_decode($output, true);
         $accessToken = $outputArray['access_token'];
