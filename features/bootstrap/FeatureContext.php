@@ -5,6 +5,10 @@ use Behat\Behat\Context\Context;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Fig\Link\Link;
+use GuzzleHttp\Url;
+use Bossa\PhpSpec\Expect\Subject;
+use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 /**
  * Defines application features from the specific context.
@@ -36,7 +40,9 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      * Add a new entry with given url parameter 
      * @When the user adds a new entry with the url :link
      * @Given the user has added a new entry with the url :link
-     *
+     * @param string $link
+     * 
+     * @return void
      */
     public function addEntry($link)
     {
@@ -46,6 +52,10 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     /**
      * Expect added entry with correct title and link description as given in feature file
      * @Then an entry should be listed in the list with the title :title and the link description :description
+     * @param string $description
+     * @param string $title
+     * 
+     * @return void
      */
     public function entryShouldBeListed($title, $description)
     {
@@ -57,6 +67,10 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      * Expect correct number of unread entries as expected in feature file
      * @Then the count of unread entries should be :num
      * @Given the list of unread entries is :num
+     * 
+     * @param integer $num
+     * 
+     * @return void
      */
     public function theCountOfUnreadEntries($num)
     {
@@ -67,6 +81,8 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     /**
      * Open the login page.
      * @Given the user has browsed to the login page
+     * 
+     * @return Page
      */
     public function visitLogIn()
     {
@@ -78,16 +94,23 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      * Logs in with given username and password as given in feature file.
      * @When the user logs in with username :username and password :password
      * @Given user has logged in with username :username and password :password
+     * 
+     * @param string $username
+     * @param string $password
+     * 
+     * @return void
      */
     public function logIn($username, $password)
     {
-        $this->loginPage->login($this->getSession(), $username, $password);
+       $this->loginPage->login($this->getSession(), $username, $password);
     }
     
     /**
      * Logs in as super admin
      * @When the user logs in as super admin
      * @Given user has logged in as super admin
+     * 
+     * @return void
      */
     public function logInSuperAdmin()
     {
@@ -97,6 +120,10 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     /**
      * Expect the title of the page as provided in feature file.
      * @Then the user should be redirected to a page with the title :pageTitle
+     * 
+     * @param string $pageTitle
+     * 
+     * @return void
      */
     public function checkPageTitle($pageTitle)
     {
@@ -107,6 +134,10 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     /**
      * Expect correct error message as login fails
      * @Then an error message should be displayed saying :errorMessage
+     * 
+     * @param string $errorMessage
+     * 
+     * @return void
      */
     public function errorMessage($errorMessage)
     {
@@ -115,8 +146,49 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Delete entry with given title as in feature file
+     * @When the user deletes the item with the title :title
+     * @param string $title
+     * 
+     * @return void
+     */
+    public function deleteItem($title)
+    {
+        $this->unreadPage->deleteEntry($this->getSession(), $title);
+    }
+    
+    /**
+     * Cancel the delete entry
+     * @When user press cancel button on popup after pressing delete button for title :title
+     * 
+     * @param string $title
+     */
+    public function userPressCancel($title)
+    {
+        $this->unreadPage->cancelDelete($this->getSession(), $title);
+    }
+    
+    /**
+     * Check and Expect the entry with given title and description is lited in unread entries list
+     * @Then there should not be entry in list with title :title and the link description :description
+     * 
+     * @param string $title
+     * @param string $description
+     * 
+     * @return void
+     */
+    public function thereShouldNotBeEntryInListWithTitle($title,$description)
+    {
+        expect($this->unreadPage->isEntryListed($this->getSession(), $title, $description))->toBe(false);
+    }
+    
+    /**
      * Get API Client Id and Client Secret 
      * @BeforeScenario
+     * 
+     * @param BeforeScenarioScope $scope
+     * 
+     * @return void
      */
     public function  getApiClient(BeforeScenarioScope $scope){
         if ( getenv('API_CLIENT_ID') == false && getenv('CLIENT_SECRET') == false){
@@ -135,6 +207,8 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      * Hide the footer bar 
      * @BeforeScenario
      * @param BeforeScenarioScope $scope
+     * 
+     * @return void
      */
     public function hideFooter(BeforeScenarioScope $scope){
         $footerBar = $this->getSession()->getPage()->find('xpath', $this->footerBarXPath);
@@ -145,7 +219,11 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     
     /**
      * Clear All the items Before Scenario 
-     * @BeforeScenario  */
+     * @BeforeScenario  
+     * @param BeforeScenarioScope $scope
+     * 
+     * @return void
+     */
     public function clearAllItemsBeforeScenario(BeforeScenarioScope $scope){
         $ch = curl_init();
         $SERVER_URL = $this->getMinkParameter("base_url");
@@ -180,30 +258,4 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     
-    /**
-     * Delete entry with given title as in feature file
-     * @When the user deletes the item with the title :title
-     */
-    public function deleteItem($title)
-    {
-        $this->unreadPage->deleteEntry($this->getSession(), $title);
-    }
-    
-    /**
-     * Cancel the delete entry  
-     * @When user press cancel button on popup after pressing delete button for title :title
-     */
-    public function userPressCancel($title)
-    {
-        $this->unreadPage->cancelDelete($this->getSession(), $title);
-    }
-    
-    /**
-     * Check and Expect the entry with given title and description is lited in unread entries list
-     * @Then there should not be entry in list with title :title and the link description :description
-     */
-    public function thereShouldNotBeEntryInListWithTitle($title,$description)
-    {
-        expect($this->unreadPage->isEntryListed($this->getSession(), $title, $description))->toBe(false);
-    }
 }
