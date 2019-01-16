@@ -5,9 +5,6 @@ use Behat\Behat\Context\Context;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Fig\Link\Link;
-use GuzzleHttp\Url;
-use Bossa\PhpSpec\Expect\Subject;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 /**
