@@ -67,7 +67,6 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function visitLogIn()
     {
         $this->loginPage->open();
-        var_dump($this->getSession()->getDriver()->getWebDriverSession()->getUrl());
     }
     
     /**

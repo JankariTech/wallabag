@@ -101,7 +101,6 @@ script:
     - if [[ $VALIDATE_TRANSLATION_FILE = run ]]; then php bin/console lint:yaml src/Wallabag/UserBundle/Resources/translations -v ; fi;
     - if [[ $ASSETS = build ]] && [[ $RUN_UI_TEST != true ]]; then yarn run build:prod; fi;
     - if [[ $RUN_UI_TEST = true ]]; then mv app/config/parameters_acceptance.yml app/config/parameters.yml; fi;
-    - if [[ $RUN_UI_TEST = true ]]; then cat app/config/parameters.yml; fi;
     - if [[ $RUN_UI_TEST = true ]]; then yarn run build:dev; fi; 
-    - if [[ $RUN_UI_TEST = true ]]; then php bin/console server:start && curl http://wallabag:8000; fi;
+    - if [[ $RUN_UI_TEST = true ]]; then php bin/console server:start; fi;
     - if [[ $RUN_UI_TEST = true ]]; then php bin/behat --profile=test; fi;
