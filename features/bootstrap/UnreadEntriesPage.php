@@ -58,7 +58,7 @@ class UnreadEntriesPage extends Page{
     }
     
     /**
-     * delte entry which tiitle is provided
+     * delete entry which title is provided
      * @param Session $session
      * @param string $title
      * @return void
@@ -78,6 +78,7 @@ class UnreadEntriesPage extends Page{
      * Cancel delete operation
      * @param Session $session
      * @param string $title
+     * @return void
      */    
     public function cancelDelete(Session $session,$title){
         $Allentry = $this->getAllEntry($session);
@@ -94,6 +95,7 @@ class UnreadEntriesPage extends Page{
      * add new entry to list of unread entries
      * @param Session $session
      * @param string $link
+     * @return void
      */
     public function addNewEntry(Session $session,$link){
         $page=$session->getPage();

@@ -33,6 +33,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Add a new entry with given url parameter 
      * @When the user adds a new entry with the url :link
      * @Given the user has added a new entry with the url :link
      *
@@ -43,6 +44,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Expect added entry with correct title and link description as given in feature file
      * @Then an entry should be listed in the list with the title :title and the link description :description
      */
     public function entryShouldBeListed($title, $description)
@@ -52,6 +54,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Expect correct number of unread entries as expected in feature file
      * @Then the count of unread entries should be :num
      * @Given the list of unread entries is :num
      */
@@ -62,14 +65,17 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Open the login page.
      * @Given the user has browsed to the login page
      */
     public function visitLogIn()
     {
         $this->loginPage->open();
+        var_dump($this->getSession()->getDriver()->getWebDriverSession()->getUrl());
     }
     
     /**
+     * Logs in with given username and password as given in feature file.
      * @When the user logs in with username :username and password :password
      * @Given user has logged in with username :username and password :password
      */
@@ -79,6 +85,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Logs in as super admin
      * @When the user logs in as super admin
      * @Given user has logged in as super admin
      */
@@ -88,15 +95,17 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Expect the title of the page as provided in feature file.
      * @Then the user should be redirected to a page with the title :pageTitle
      */
-    public function redirectToPage($pageTitle)
+    public function checkPageTitle($pageTitle)
     {
         $title = $this->quickStartPage->checkTitle($this->getSession());
         expect($title)->toBe($pageTitle);
     }
     
     /**
+     * Expect correct error message as login fails
      * @Then an error message should be displayed saying :errorMessage
      */
     public function errorMessage($errorMessage)
@@ -106,6 +115,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Get API Client Id and Client Secret 
      * @BeforeScenario
      */
     public function  getApiClient(BeforeScenarioScope $scope){
@@ -122,6 +132,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Hide the footer bar 
      * @BeforeScenario
      * @param BeforeScenarioScope $scope
      */
@@ -132,7 +143,9 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         }
     }
     
-    /** @BeforeScenario  */
+    /**
+     * Clear All the items Before Scenario 
+     * @BeforeScenario  */
     public function clearAllItemsBeforeScenario(BeforeScenarioScope $scope){
         $ch = curl_init();
         $SERVER_URL = $this->getMinkParameter("base_url");
@@ -168,6 +181,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     
     
     /**
+     * Delete entry with given title as in feature file
      * @When the user deletes the item with the title :title
      */
     public function deleteItem($title)
@@ -176,6 +190,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Cancel the delete entry  
      * @When user press cancel button on popup after pressing delete button for title :title
      */
     public function userPressCancel($title)
@@ -184,6 +199,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
+     * Check and Expect the entry with given title and description is lited in unread entries list
      * @Then there should not be entry in list with title :title and the link description :description
      */
     public function thereShouldNotBeEntryInListWithTitle($title,$description)
