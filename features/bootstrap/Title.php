@@ -2,12 +2,12 @@
 use Behat\Mink\Session;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
-class QuickStartPage extends Page{
+class Title extends Page{
     protected $path = '/quickstart';
     protected $titleXPath = '//title';
     
     /**
-     * check title of quickstart page
+     * check title of different page
      * @param Session $session
      * @return mixed
      */

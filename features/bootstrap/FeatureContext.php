@@ -14,21 +14,21 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
 {
     
     protected $loginPage;
-    protected $quickStartPage;
+    protected $title;
     protected $unreadPage;
     protected $apiClientPage;
+    protected $toolBar;
     protected $username;
     protected $password;
-    protected $footerBarXPath = "//div[contains(@style,'display: block') and contains(@id,'sfToolbarMainContent')]";
-    protected $footerHideButton = "//a[contains(@class,'hide-button')]";
     
     public function __construct(
-        LoginPage $loginpage,QuickStartPage $quickStart,UnreadEntriesPage $unreadPage,APIClientsPage $apiClientPage,
+        LoginPage $loginpage,Title $title,UnreadEntriesPage $unreadPage,APIClientsPage $apiClientPage,ToolBar $toolBar,
         $parameters){
             $this->loginPage = $loginpage;
-            $this->quickStartPage = $quickStart;
+            $this->title = $title;
             $this->unreadPage = $unreadPage;
             $this->apiClientPage= $apiClientPage;
+            $this->toolBar = $toolBar;
             $this->username=$parameters['adminUserName'];
             $this->password=$parameters['adminPassword'];
     }
@@ -84,7 +84,6 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function visitLogIn()
     {
         $this->loginPage->open();
-        var_dump($this->getSession()->getDriver()->getWebDriverSession()->getUrl());
     }
     
     /**
@@ -124,7 +123,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
      */
     public function checkPageTitle($pageTitle)
     {
-        $title = $this->quickStartPage->checkTitle($this->getSession());
+        $title = $this->title->checkTitle($this->getSession());
         expect($title)->toBe($pageTitle);
     }
     
@@ -201,17 +200,14 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
     
     /**
-     * Hide the footer bar 
+     * Hide tool bar 
      * @BeforeScenario
      * @param BeforeScenarioScope $scope
      * 
      * @return void
      */
-    public function hideFooter(BeforeScenarioScope $scope){
-        $footerBar = $this->getSession()->getPage()->find('xpath', $this->footerBarXPath);
-        if ($footerBar != Null){
-            $this->getSession()->getPage()->find('xpath', $this->footerHideButton)->click();
-        }
+    public function hideToolBar(BeforeScenarioScope $scope){
+        $this->toolBar->hideToolBar($this->getSession()->getPage());
     }
     
     /**
